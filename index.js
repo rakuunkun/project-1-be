@@ -30,4 +30,7 @@ const { authRoutes } = require("./src/routes");
 app.use("/auth", authRoutes);
 // app.use("/product", productRoutes);
 
+const { profileRoutes } = require("./src/routes");
+app.use("/profile", profileRoutes);
+
 app.listen(PORT, () => console.log(`App jalan di port${PORT}`));
