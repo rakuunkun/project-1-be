@@ -166,6 +166,7 @@ module.exports = {
       conn.release();
       // send token by headers
       res.set("x-token-access", tokenAccess);
+      console.log(tokenAccess);
       return res.status(200).send(result[0]);
     } catch (error) {
       conn.release();

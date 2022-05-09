@@ -15,7 +15,7 @@ app.use(
 app.use(express.json());
 app.use(
   cors({
-    exposedHeaders: ["x-token-access", "x-total-count"],
+    exposedHeaders: ["x-total-count", "x-token-access"],
   })
 );
 app.use(express.urlencoded({ extended: true }));
@@ -32,5 +32,8 @@ app.use("/auth", authRoutes);
 
 const { profileRoutes } = require("./src/routes");
 app.use("/profile", profileRoutes);
+
+const { postRoutes } = require("./src/routes");
+app.use("/post", postRoutes);
 
 app.listen(PORT, () => console.log(`App jalan di port${PORT}`));

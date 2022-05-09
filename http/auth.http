@@ -27,3 +27,20 @@ Content-Type: application/json
     "birthDate":"02-02-1998",
     "bio":"2022 kawin"
 }
+
+###
+GET http://localhost:5000/auth/keeplogin HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInVzZXJuYW1lIjoicmFrdXVua3VuMjJzIiwidGltZWNyZWF0ZWQiOjE2NTIwNjUwMzgzODksImlhdCI6MTY1MjA2NTAzOCwiZXhwIjoxNjUyMDY1MzM4fQ.ub6ct2Gss1O--zfiUWSK5pLt0-RR9jKCHHWpU5isxaM
+
+###
+POST  http://localhost:5000/profile/addProfile HTTP/1.1
+Content-Type: application/json
+
+{
+    "fullname": "ampuh",
+    "birthDate":"02-02-1998",
+    "bio":"2022 kawin"
+}
+
+###
+GET http://localhost:5000/post/getpost HTTP/1.1
