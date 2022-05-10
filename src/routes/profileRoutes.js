@@ -1,5 +1,5 @@
 const express = require("express");
-// const { verifyTokenAccess } = require("../lib/verifyToken");
+const { verifyTokenAccess } = require("../lib/jwtVerify");
 const Router = express.Router();
 const { profileControllers } = require("./../controllers");
 const { getProfile, editProfile } = profileControllers;
@@ -10,7 +10,7 @@ const uploader = upload("/profile", "PROFILE").fields([
 ]);
 
 Router.get("/:username", getProfile);
-Router.patch("/editProfile/:id", uploader, editProfile);
-// verifyTokenAccess
+Router.patch("/editProfile", verifyTokenAccess, editProfile);
+// Router.patch("/editProfile/:id", uploader, editProfile);
 
 module.exports = Router;

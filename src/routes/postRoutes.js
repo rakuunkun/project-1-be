@@ -30,17 +30,21 @@ Router.get("/getpost", getAllPost);
 // Router.get("/getcommentscount/:postID", verifyTokenAccess, getCommentsCount);
 // Router.get("/getuserpost", verifyTokenAccess, getUserPost);
 // Router.get("/getuserpostmedia", verifyTokenAccess, getUserPostMedia);
-// Router.get("/getuserpostdetail/:postID", verifyTokenAccess, getUserPostDetail);
-// Router.get("/getcomments/:postID", verifyTokenAccess, getComments);
+Router.get("/getuserpostdetail/:postID", verifyTokenAccess, getUserPostDetail);
+Router.get("/getcomments/:postID", verifyTokenAccess, getComments);
 // Router.get("/getusercomment", verifyTokenAccess, getUserComments);
 
 Router.post("/postcaptionimage", verifyTokenAccess, uploader, postCaptionImage);
 
-// Router.post("/addlikes/:postID", verifyTokenAccess, addLikes);
-// Router.post("/comments/:postID", verifyTokenAccess, insertComments);
+Router.post("/addlikes/:postID", verifyTokenAccess, addLikes);
+Router.post("/comments/:postID", verifyTokenAccess, insertComments);
 
-// Router.delete("/deletepost/:postID", verifyTokenAccess, deletePost)
+Router.delete("/deletepost/:postID", verifyTokenAccess, deletePost);
 
-// Router.patch("/editpostcaptionimage/:postID", verifyTokenAccess, uploaderPostImage, editPostCaptionImage)
+Router.patch(
+  "/editpostcaptionimage/:postID",
+  verifyTokenAccess,
+  editPostCaptionImage
+);
 
 module.exports = Router;
