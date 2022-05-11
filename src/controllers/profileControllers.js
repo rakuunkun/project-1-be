@@ -55,8 +55,9 @@ module.exports = {
     }
   },
   addProfilePhoto: async (req, res) => {
+    console.log("ini req.files", req.files);
+    console.log("ini req.body", req.body);
     const { id } = req.user;
-    console.log("ini req.file profilePic", req.file);
     let path = "/photos";
 
     const imagePath = req.file ? `${path}/${req.file.filename}` : null;
@@ -67,9 +68,17 @@ module.exports = {
     let conn, sql;
     try {
       conn = await dbCon.promise().getConnection();
+
+      sql = `select profilePic from users where id = ?`;
+      let [result0] = await conn.query(sql, id);
+      console.log(result0, "ini profpic sebelum");
+      if (result0.length == 1) {
+        fs.unlinkSync("./public" + result0[0].profilePic);
+      }
+
       sql = `update users set ? where id = ?`;
       let updateData = {
-        profile_picture: imagePath,
+        profilePic: imagePath,
       };
       await conn.query(sql, [updateData, id]);
 

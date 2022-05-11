@@ -33,49 +33,14 @@ module.exports = {
     }
   },
   getAllPost: async (req, res) => {
-    // const { id } = req.user
-    // let { page, limit } = req.query;
-    // // initialize offSet limit
-    // if (!page) {
-    //   page = 0;
-    // }
-    // if (!limit) {
-    //   limit = 10;
-    // }
-    // let offset = page * limit;
-
-    // // jadiin INT
-    // limit = parseInt(limit);
-
     let conn, sql;
     try {
       conn = await dbCon.promise().getConnection();
 
       await conn.beginTransaction();
       sql = `select users.username, users.profilePic, users.id, posts.image_url, posts.caption, posts.id as postID, posts.created_at from users join posts on posts.user_ID = users.id order by posts.created_at desc`;
-      // ${dbCon.escape(
-      //     offset
-      //   )}, ${dbCon.escape(limit)}`;
+
       let [result] = await conn.query(sql);
-
-      //   sql = `select updated_at from posts where postID = ?`;
-      //   for (let i = 0; i < result.length; i++) {
-      //     const element = result[i];
-      //     const [resultDate] = await conn.query(sql, element.postID);
-      //     result[i] = {
-      //       ...result[i],
-      //       fromnow: moment(resultDate[0].updated_at).fromNow(),
-      //     };
-      //   }
-
-      //Photo
-      //   sql = `select id, image from post_image where post_id = ?`;
-
-      //   for (let i = 0; i < result.length; i++) {
-      //     const element = result[i];
-      //     const [resultImage] = await conn.query(sql, element.postID);
-      //     result[i] = { ...result[i], photos: resultImage };
-      //   }
 
       //Likes count
       sql = `select count(*) likes_count from likes where posts_id = ?`;
@@ -101,21 +66,6 @@ module.exports = {
           alreadyliked: resultHadLiked[0].already_liked,
         };
       }
-
-      //   //Comments
-      //   sql = `SELECT count(comment) as comments FROM post_comment where post_id = ?`;
-      //   for (let i = 0; i < result.length; i++) {
-      //     const element = result[i];
-      //     const [resultComments] = await conn.query(sql, element.postID);
-      //     result[i] = { ...result[i], comments: resultComments[0].comments };
-      //   }
-
-      //   sql = `SELECT COUNT(*) as total_posts FROM post`;
-      //   let [totalPosts] = await conn.query(sql);
-
-      //   // console.log("ini result", result)
-
-      //   res.set("x-total-count", totalPosts[0].total_posts);
 
       conn.release();
       conn.commit();
@@ -185,60 +135,16 @@ module.exports = {
       // update data
       sql = `Update posts set ? where id = ?`;
 
-      // tanda tanya untuk set harus object
       await conn.query(sql, [updateCaption, postID]);
-      // setelah update hapus image
-      //   if (imagePath) {
-      //     // klo image baru ada maka hapus image lama
-      //     if (result[0].photos) {
-      //       for (let i = 0; i < result[0].photos.length; i++) {
-      //         const element = result[0].photos[i];
-      //         fs.unlinkSync("./public" + element);
-      //       }
-      //     }
-      //     console.log(imagePath);
-      //   }
 
-      //   sql = `delete from image_url where posts_id = ?`;
-      //   await conn.query(sql, postID);
-
-      // sql = `Update post_image set ? where post_id = ?`;
-      //   sql = `insert into image_url set ?`;
-      // for (let i = 0; i < imagePath.length; i++) {
-      //   let val = imagePath[i];
-      //   let updateDataImage = {
-      //     image: val,
-      //   };
-      //   await conn.query(sql, [updateDataImage, postID]);
-      // }
-      //   for (let i = 0; i < imagePath.length; i++) {
-      //     let val = imagePath[i];
-      //     let insertDataImage = {
-      //       image: val,
-      //       post_id: postID,
-      //     };
-      //     await conn.query(sql, insertDataImage);
-      //   }
       //GET DATA POST LAGI
       sql = `select users.username, users.profilePic, posts.image_url, posts.caption, posts.id from users join posts on posts.user_ID = users.id where posts.id = ?`;
       let [result1] = await conn.query(sql, [postID]);
 
-      //   sql = `select id, image from post_image where post_id = ?`;
-
-      //   for (let i = 0; i < result1.length; i++) {
-      //     const element = result1[i];
-      //     const [resultImage] = await conn.query(sql, element.postID);
-      //     console.log("ini resultImage", resultImage);
-      //     result1[i] = { ...result1[i], photos: resultImage };
-      //   }
-      //   console.log(result1);
       await conn.commit();
       conn.release();
       return res.send(result1);
     } catch (error) {
-      // if (imagePath) {
-      //   fs.unlinkSync("./public" + imagePath);
-      // }
       console.log(error);
       await conn.rollback();
       conn.release();
@@ -255,39 +161,6 @@ module.exports = {
       await conn.beginTransaction();
       let sql = `select users.username, users.profilePic, posts.image_url, posts.caption, posts.id from users join posts on posts.user_ID = users.id where posts.id = ?`;
       let [result] = await conn.query(sql, postID);
-
-      //   sql = `select id, image from posts.image_url where post_id = ?`;
-
-      //   for (let i = 0; i < result.length; i++) {
-      //     const element = result[i];
-      //     const [resultImage] = await conn.query(sql, element.postID);
-      //     console.log("ini resultImage", resultImage);
-      //     result[i] = { ...result[i], photos: resultImage };
-      //   }
-
-      //   sql = `select count(*) likes_count from likes where post_id = ?`;
-      //   for (let i = 0; i < result.length; i++) {
-      //     const element = result[i];
-      //     const [resultLikes] = await conn.query(sql, element.postID);
-      //     console.log("ini resultLikes", resultLikes);
-      //     result[i] = { ...result[i], likes: resultLikes[0].likes_count };
-      //   }
-
-      //   sql = `select post.id postID, post.user_id post_U_ID, post.caption, if(likes.id is null, 0 ,1) as already_liked
-      //   from post
-      //   left join likes on likes.post_id = post.id
-      //   where post.user_id = ? and post.id = ?`;
-      //   for (let i = 0; i < result.length; i++) {
-      //     const element = result[i];
-      //     const [resultHadLiked] = await conn.query(sql, [
-      //       element.userID,
-      //       element.postID,
-      //     ]);
-      //     result[i] = {
-      //       ...result[i],
-      //       alreadyliked: resultHadLiked[0].already_liked,
-      //     };
-      //   }
 
       console.log("ini result", result);
 
