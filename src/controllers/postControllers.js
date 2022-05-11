@@ -85,9 +85,9 @@ module.exports = {
     let conn = await dbCon.promise().getConnection();
     try {
       console.log("this is post id", postID);
-      // jika pake connection jangan lupa di release
+
       await conn.beginTransaction();
-      // get data dulu
+
       let sql = `select users.username, users.profilePic, posts.image_url, posts.caption, posts.id from users join posts on posts.user_ID = users.id where posts.id = ? `;
       let [result] = await conn.query(sql, postID);
       if (!result.length) {
@@ -96,7 +96,6 @@ module.exports = {
       sql = `delete from posts where id = ?`;
       await conn.query(sql, postID);
 
-      //   let [posts] = await conn.query(sql);
       await conn.commit();
       conn.release();
       return res.status(200).send({ message: "berhasil delete" });
@@ -108,12 +107,6 @@ module.exports = {
     }
   },
   editPostCaptionImage: async (req, res) => {
-    // console.log("ini body", req.body.data);
-    // const data = JSON.parse(req.body.data);
-
-    // let updateData = { ...data };
-    // console.log(updateData);
-
     const { caption } = req.body;
     let updateCaption = { caption: caption };
 
@@ -126,18 +119,17 @@ module.exports = {
       conn = await dbCon.promise().getConnection();
 
       await conn.beginTransaction();
-      // get datanya nya dahulu
+
       sql = `select users.username, users.profilePic, posts.image_url, posts.caption, posts.id from users join posts on posts.user_ID = users.id where posts.id = ?   `;
       let [result] = await conn.query(sql, [postID]);
       if (!result.length) {
         throw { message: "Post not found" };
       }
-      // update data
+
       sql = `Update posts set ? where id = ?`;
 
       await conn.query(sql, [updateCaption, postID]);
 
-      //GET DATA POST LAGI
       sql = `select users.username, users.profilePic, posts.image_url, posts.caption, posts.id from users join posts on posts.user_ID = users.id where posts.id = ?`;
       let [result1] = await conn.query(sql, [postID]);
 
